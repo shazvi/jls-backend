@@ -1,0 +1,25 @@
+{
+    "name": "jls-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+        "seed": "node src/seed.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.13",
+        "@types/mysql": "^2.15.21",
+        "@types/node": "^17.0.23",
+        "typescript": "^4.6.3"
+    },
+    "dependencies": {
+        "db-migrate-mysql": "^2.2.0",
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "mysql": "^2.18.1"
+    }
+}
