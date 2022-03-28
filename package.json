@@ -4,8 +4,13 @@
     "description": "",
     "scripts": {
         "serve": "npx ts-node src/index.ts",
+        "migrate": "db-migrate up",
         "seed": "node src/seed.ts",
+        "postinstall": "tsc",
         "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "engines":{
+        "node":"16.14.0"
     },
     "keywords": [],
     "author": "",
@@ -18,6 +23,7 @@
         "typescript": "^4.6.3"
     },
     "dependencies": {
+        "db-migrate": "^0.11.13",
         "db-migrate-mysql": "^2.2.0",
         "dotenv": "^16.0.0",
         "express": "^4.17.3",

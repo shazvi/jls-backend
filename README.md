@@ -14,7 +14,6 @@
 
 - Node.js
 - MySQL
-- db-migrate (`npm install -g db-migrate`)
 
 ### Local setup
 
@@ -24,7 +23,7 @@
 
 ```bash
 npm install
-db-migrate up
+npm run migrate
 npm run seed
 
 # Run local server
