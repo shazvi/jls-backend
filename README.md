@@ -30,11 +30,3 @@ npm run seed
 # Run local server
 npm run serve
 ```
-
-### Deployment (CI/CD)
-
--
-
-### Testing
-
--

@@ -23,3 +23,16 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
     });
     next();
 }
+
+export const cors = (req: Request, res: Response, next: NextFunction) => {
+    // Origins that are allowed
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Methods that are allowed
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT');
+
+    // Headers that are allowed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    
+    next();
+}

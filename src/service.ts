@@ -1,4 +1,4 @@
-import {CoreProduct, FullProduct, FullProductRow} from './interface';
+import {CoreProduct, FullProduct, FullProductRow, Stock} from './interface';
 import {db} from './db';
 
 export const getProducts = async (): Promise<CoreProduct[]> => {
@@ -37,30 +37,28 @@ export const getProductById = async (coreId: string): Promise<FullProduct | null
                 if(result.length < 1) {
                     return resolve(null);
                 }
-                
-                // assign db query result properties to response object,
-                const fullProduct: FullProduct = {
-                    ...result[0],
-                    stock: []
-                };
 
                 const locationChecked: string[] = [];
+                const stock: Stock[] = [];
+                let total_quantity = 0;
+                
                 result.forEach((row) => {
                     const {location, quantity, transaction_id, quantity_change, date_time} = row;
 
-                    // append stock data for each location
+                    // stock data for each location
                     if (location && quantity && !locationChecked.includes(location)) {
-                        fullProduct.stock.push({
+                        stock.push({
                             location: location,
                             quantity: quantity,
                             transactions: []
                         });
+                        total_quantity += quantity;
                         locationChecked.push(location);
                     }
 
                     // append transaction data to last added location (to keep this logic within a single loop)
                     if (transaction_id && location && quantity_change && date_time) {
-                        fullProduct.stock[fullProduct.stock.length-1].transactions.push({
+                        stock[stock.length-1].transactions.push({
                             id: transaction_id,
                             core_id: coreId,
                             location,
@@ -69,6 +67,10 @@ export const getProductById = async (coreId: string): Promise<FullProduct | null
                         });
                     }
                 });
+
+                // assign db query result properties to response object,
+                const fullProduct: FullProduct = {...result[0], total_quantity, stock};
+                
                 resolve(fullProduct);
             }
         });

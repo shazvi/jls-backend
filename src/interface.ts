@@ -53,6 +53,7 @@ export interface FullProductRow extends BaseFullProduct{
 // Full product object for API response
 export interface FullProduct extends BaseFullProduct{
     stock: Stock[],
+    total_quantity: number
 }
 
 // Stock movement transaction for a specific location
