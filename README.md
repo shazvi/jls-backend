@@ -8,6 +8,7 @@
 - While normally we would have a location table I didn't create one since the only location detail we have is the location id which is already present in the stock table.
 - It is generally a good idea to log api requests for debugging. For now, I am simply logging it to the console, but we would have a more robust solution in a real product.
 - Callback hell is a real place and no one deserves to witness it. I am more in favor of async/await, therefore all callback based code has been wrapped in Promises.
+- The source files would normally have a more rigid structure with separate folders for interfaces, middlewares, routers, services. But this is a small project therefore I decide not to over-engineer it and kept it all in the src folder itself.
 
 ### Dependencies
 

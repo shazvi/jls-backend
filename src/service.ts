@@ -19,9 +19,13 @@ export const getProducts = async (): Promise<CoreProduct[]> => {
 export const getProductById = async (coreId: string): Promise<FullProduct | null> => {
     // Get core product + stock data for core product
     const queryString = 
-        `select c.core_id, c.internal_title, c.vendor, c.vendor_title, c.vendor_sku, c.backup_vendor, c.backup_vendor_sku, c.restockable, c.vendor_order_unit, c.vendor_case_pack, c.moq, c.buffer_days, c.minimum_level, c.product_url, c.note_for_next_order, c.case_pack, c.pieces_per_internal_box, c.boxes_per_case, c.tags_info, c.tag1, c.tag2, c.tag3, c.tag4, c.hazmat, c.active, c.ignore_until, c.notes, s.location, s.quantity
+        `select
+            c.core_id, c.internal_title, c.vendor, c.vendor_title, c.vendor_sku, c.backup_vendor, c.backup_vendor_sku, c.restockable, c.vendor_order_unit, c.vendor_case_pack, c.moq, c.buffer_days, c.minimum_level, c.product_url, c.note_for_next_order, c.case_pack, c.pieces_per_internal_box, c.boxes_per_case, c.tags_info, c.tag1, c.tag2, c.tag3, c.tag4, c.hazmat, c.active, c.ignore_until, c.notes,
+            s.location, s.quantity,
+            t.id as transaction_id, t.quantity_change, t.date_time
         from core_product as c
         left join stock s on c.core_id = s.core_id
+        left join transaction t on c.core_id = t.core_id and s.location = t.location
         where c.core_id = ?`;
 
     // Wrap db query callback in Promise
@@ -34,16 +38,34 @@ export const getProductById = async (coreId: string): Promise<FullProduct | null
                     return resolve(null);
                 }
                 
-                // assign db query object properties to response object, append stock data
+                // assign db query result properties to response object,
                 const fullProduct: FullProduct = {
                     ...result[0],
                     stock: []
                 };
+
+                const locationChecked: string[] = [];
                 result.forEach((row) => {
-                    if (row.location && row.quantity) {
+                    const {location, quantity, transaction_id, quantity_change, date_time} = row;
+
+                    // append stock data for each location
+                    if (location && quantity && !locationChecked.includes(location)) {
                         fullProduct.stock.push({
-                            location: row.location,
-                            quantity: row.quantity
+                            location: location,
+                            quantity: quantity,
+                            transactions: []
+                        });
+                        locationChecked.push(location);
+                    }
+
+                    // append transaction data to last added location (to keep this logic within a single loop)
+                    if (transaction_id && location && quantity_change && date_time) {
+                        fullProduct.stock[fullProduct.stock.length-1].transactions.push({
+                            id: transaction_id,
+                            core_id: coreId,
+                            location,
+                            quantity_change,
+                            date_time
                         });
                     }
                 });

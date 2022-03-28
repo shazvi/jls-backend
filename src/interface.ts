@@ -7,7 +7,8 @@ export interface CoreProduct {
 // Product stock at a location
 export interface Stock {
     location: string,
-    quantity: number
+    quantity: number,
+    transactions: Transaction[]
 }
 
 export interface BaseFullProduct {
@@ -37,7 +38,10 @@ export interface BaseFullProduct {
     hazmat?: string,
     active?: boolean,
     ignore_until?: string,
-    notes?: string
+    notes?: string,
+    transaction_id?: number,
+    quantity_change?: number,
+    date_time?: Date
 }
 
 // Full product object from db query
@@ -48,5 +52,14 @@ export interface FullProductRow extends BaseFullProduct{
 
 // Full product object for API response
 export interface FullProduct extends BaseFullProduct{
-    stock: Stock[]
+    stock: Stock[],
+}
+
+// Stock movement transaction for a specific location
+export interface Transaction {
+    id: number,
+    core_id: string,
+    location: string,
+    quantity_change: number,
+    date_time: Date
 }
