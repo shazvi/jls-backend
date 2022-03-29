@@ -38,16 +38,16 @@ export interface BaseFullProduct {
     hazmat?: string,
     active?: boolean,
     ignore_until?: string,
-    notes?: string,
-    transaction_id?: number,
-    quantity_change?: number,
-    date_time?: Date
+    notes?: string
 }
 
 // Full product object from db query
 export interface FullProductRow extends BaseFullProduct{
     location?: string,
-    quantity?: number
+    quantity?: number,
+    transaction_id?: number,
+    quantity_change?: number,
+    date_time?: Date
 }
 
 // Full product object for API response

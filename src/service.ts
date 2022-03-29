@@ -69,7 +69,13 @@ export const getProductById = async (coreId: string): Promise<FullProduct | null
                 });
 
                 // assign db query result properties to response object,
-                const fullProduct: FullProduct = {...result[0], total_quantity, stock};
+                const fullProductRow = result[0];
+                delete fullProductRow.location;
+                delete fullProductRow.quantity;
+                delete fullProductRow.transaction_id;
+                delete fullProductRow.quantity_change;
+                delete fullProductRow.date_time;
+                const fullProduct: FullProduct = {...fullProductRow, total_quantity, stock};
                 
                 resolve(fullProduct);
             }
